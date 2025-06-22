@@ -21,17 +21,17 @@ else
 fi
 
 function main() {
-  local tool_path=""
   local tool_name=""
+  local tool_path=""
 
   for tool_path in tools/*; do
     tool_name="$(basename "$tool_path")"
     echo "Checking $tool_name"
-#    if ! check-changes "$tool_path"; then
-#      echo "Skipping $tool_name"
-#      continue
-#    fi
-    if ! _check_release "$tool_path"; then
+    if ! check-changes "$tool_name"; then
+      echo "Skipping $tool_name"
+      continue
+    fi
+    if ! _check_release "$tool_name"; then
       echo "Skipping $tool_name"
       continue
     fi
