@@ -97,7 +97,7 @@ function _perform_release() {
   git push origin "$next_tag"
 
   echo "Updating version from $prev_version to $next_version"
-  _update_version "$tool_name" "$prev_version" "$next_version"
+  _update_formula "$tool_name" "$prev_version" "$next_version"
   git add "$(_tool_formula "$tool_name")"
 
   if _is_go_tool "$tool_name"; then
@@ -124,7 +124,7 @@ function _perform_release() {
 }
 
 # update prev_version in homebrew formula
-function _update_version() {
+function _update_formula() {
   local tool_name=""
   local prev_version=""
   local next_version=""
