@@ -14,7 +14,7 @@ dev-man:
 
 .PHONY: build
 build:
-	go build -o $(TOOL) main.go
+	GOOS=darwin GOARCH=arm64 go build -o $(TOOL) main.go
 
 .PHONY: doc
 doc:
