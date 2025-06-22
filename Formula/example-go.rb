@@ -6,6 +6,7 @@ class ExampleGo < Formula
 
   def install
     bin.install "example-go"
+    system "xattr", "-d", "com.apple.quarantine", "#{bin}/example-go"
 
     system bin/"example-go", "man"
     man1.install Dir["*.1"]
