@@ -102,7 +102,7 @@ function _perform_release() {
 
   if _is_go_tool "$tool_name"; then
     _doc_go_tool "$tool_name"
-    git add "$(_tool_dirpath)/docs/"
+    git add "$(_tool_dirpath "$tool_name")/docs/"
   fi
 
   echo "Creating commit"
