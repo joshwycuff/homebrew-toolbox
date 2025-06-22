@@ -85,15 +85,23 @@ function _perform_release() {
   prev_version="$(_tool_homebrew_version "$tool_name")"
   next_version="$(_tool_git_commit_id "$tool_name")"
 
+  echo "Updating version from $prev_version to $next_version"
+
   _update_version "$tool_name" "$prev_version" "$next_version"
   git add "$(_tool_formula "$tool_name")"
+
+  echo "Creating commit"
   git commit -m "release: $tool_name $next_version"
+
+  echo "Pushing"
   git push
 
   if _is_go_tool "$tool_name"; then
+    echo "Building"
     _build_go_tool "$tool_name"
   fi
 
+  echo "Creating release"
   gh release create "$next_version" "$(_tool_path "$tool_name")"
 }
 
