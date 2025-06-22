@@ -27,7 +27,7 @@ function main() {
   for tool_path in tools/*; do
     tool_name="$(basename "$tool_path")"
     echo "Checking $tool_name"
-    if ! check-changes "$tool_name"; then
+    if ! _check_changes "$tool_name"; then
       echo "Skipping $tool_name"
       continue
     fi
