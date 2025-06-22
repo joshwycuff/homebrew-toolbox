@@ -80,18 +80,23 @@ function _perform_release() {
   local tool_name=""
   local prev_version=""
   local next_version=""
+  local next_tag
 
   tool_name="$1"
 
   prev_version="$(_tool_homebrew_version "$tool_name")"
   next_version="$(_tool_git_commit_id "$tool_name")"
+  next_tag="$(_tag "$tool_name" "$next_version")"
+
+  echo "Creating tag $next_tag"
+  git tag -a "$next_tag" "$next_version" "Release for $tool_name at $next_version"
+  git push origin "$next_tag"
 
   echo "Updating version from $prev_version to $next_version"
-
   _update_version "$tool_name" "$prev_version" "$next_version"
-  git add "$(_tool_formula "$tool_name")"
 
   echo "Creating commit"
+  git add "$(_tool_formula "$tool_name")"
   git commit -m "release: $tool_name $next_version"
 
   echo "Pushing"
@@ -103,7 +108,7 @@ function _perform_release() {
   fi
 
   echo "Creating release"
-  gh release create "$next_version" "$(_tool_path "$tool_name")"
+  gh release create "$next_tag" "$(_tool_path "$tool_name")"
 }
 
 # update prev_version in homebrew formula
@@ -169,6 +174,14 @@ function _tool_formula() {
   local tool_name
   tool_name="$1"
   printf "Formula/%s.rb" "$tool_name"
+}
+
+function _tag() {
+  local tool_name
+  local tool_version
+  tool_name="$1"
+  tool_version="$2"
+  printf "%s-%s" "$tool_name" "$tool_version"
 }
 
 main
