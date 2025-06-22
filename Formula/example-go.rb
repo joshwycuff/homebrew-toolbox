@@ -6,10 +6,9 @@ class ExampleGo < Formula
 
   def install
     bin.install "example-go"
-
-#     system bin/"example-go", "man"
-#     man1.install Dir["*.1"]
-
-    generate_completions_from_executable(bin/"example-go", "completion")
+    man1.install Dir["*.1"]
+    bash_completion.install "example-go.bash" => "example-go"
+    zsh_completion.install "example-go.zsh" => "_example-go"
+    fish_completion.install "example-go.fish"
   end
 end

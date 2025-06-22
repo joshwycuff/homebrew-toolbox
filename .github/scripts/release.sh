@@ -107,11 +107,14 @@ function _perform_release() {
 
   if _is_go_tool "$tool_name"; then
     echo "Building"
-    _build_go_tool "$tool_name"
+    _package_go_tool "$tool_name"
+    echo "Creating release"
+    gh release create "$next_tag" "$(_tool_path "$tool_name").tar.gz"
+  else
+    echo "Creating release"
+    gh release create "$next_tag" "$(_tool_path "$tool_name")"
   fi
 
-  echo "Creating release"
-  gh release create "$next_tag" "$(_tool_path "$tool_name")" "$(_tool_dirpath "$tool_name")/*.1"
 }
 
 # update prev_version in homebrew formula
@@ -155,11 +158,10 @@ function _is_go_tool() {
   [[ -f "$(_tool_dirpath "$tool_name")/go.mod" ]]
 }
 
-function _build_go_tool() {
+function _package_go_tool() {
   local tool_name=""
   tool_name="$1"
-  make -C "$(_tool_dirpath "$tool_name")" build
-  make -C "$(_tool_dirpath "$tool_name")" dev-man
+  make -C "$(_tool_dirpath "$tool_name")" release
 }
 
 function _tool_path() {
