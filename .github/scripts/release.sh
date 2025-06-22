@@ -149,7 +149,7 @@ function _tool_git_commit_id() {
 function _is_go_tool() {
   local tool_name=""
   tool_name="$1"
-  [[ -f "$(_tool_dirpath "$tool_name)")/go.mod" ]]
+  [[ -f "$(_tool_dirpath "$tool_name")/go.mod" ]]
 }
 
 function _build_go_tool() {
