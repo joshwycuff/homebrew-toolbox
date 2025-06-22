@@ -8,6 +8,6 @@ class Fman < Formula
   depends_on "fzf"
 
   def install
-    bin.install "tools/fman/fman.sh" => "fman"
+    bin.install "tools/fman/fman"
   end
 end
