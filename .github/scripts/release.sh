@@ -161,7 +161,7 @@ function _is_go_tool() {
 function _package_go_tool() {
   local tool_name=""
   tool_name="$1"
-  make -C "$(_tool_dirpath "$tool_name")" release
+  make -C "$(_tool_dirpath "$tool_name")" package
 }
 
 function _tool_path() {
