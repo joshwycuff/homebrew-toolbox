@@ -89,7 +89,7 @@ function _perform_release() {
   next_tag="$(_tag "$tool_name" "$next_version")"
 
   echo "Creating tag $next_tag"
-  git tag -a "$next_tag" "$next_version" "Release for $tool_name at $next_version"
+  git tag -a "$next_tag" "$next_version" -m "Release for $tool_name at $next_version"
   git push origin "$next_tag"
 
   echo "Updating version from $prev_version to $next_version"
