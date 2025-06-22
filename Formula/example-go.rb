@@ -3,8 +3,6 @@ class ExampleGo < Formula
   homepage "https://github.com/joshwycuff/homebrew-toolbox"
   url "https://github.com/joshwycuff/homebrew-toolbox/releases/download/example-go-e55fb463745657a6a305ef7980cbf16fa1e76750/example-go"
   version "e55fb463745657a6a305ef7980cbf16fa1e76750"
-  
-  depends_on "go"
 
   def install
     bin.install "example-go"
