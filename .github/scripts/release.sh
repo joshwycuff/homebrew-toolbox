@@ -83,7 +83,8 @@ function _perform_release() {
   local tool_name=""
   local prev_version=""
   local next_version=""
-  local next_tag
+  local next_tag=""
+  local artifact=""
 
   tool_name="$1"
 
@@ -97,23 +98,28 @@ function _perform_release() {
 
   echo "Updating version from $prev_version to $next_version"
   _update_version "$tool_name" "$prev_version" "$next_version"
+  git add "$(_tool_formula "$tool_name")"
+
+  if _is_go_tool "$tool_name"; then
+    _doc_go_tool "$tool_name"
+    git add "$(_tool_dirpath)/docs/"
+  fi
 
   echo "Creating commit"
-  git add "$(_tool_formula "$tool_name")"
   git commit -m "release: $tool_name $next_version"
 
   echo "Pushing"
   git push
 
+  artifact="$(_tool_path "$tool_name")"
   if _is_go_tool "$tool_name"; then
     echo "Building"
     _package_go_tool "$tool_name"
-    echo "Creating release"
-    gh release create "$next_tag" "$(_tool_path "$tool_name").tar.gz"
-  else
-    echo "Creating release"
-    gh release create "$next_tag" "$(_tool_path "$tool_name")"
+    artifact="$(_tool_path "$tool_name").tar.gz"
   fi
+
+  echo "Creating release"
+  gh release create "$next_tag" "$artifact"
 
 }
 
@@ -156,6 +162,12 @@ function _is_go_tool() {
   local tool_name=""
   tool_name="$1"
   [[ -f "$(_tool_dirpath "$tool_name")/go.mod" ]]
+}
+
+function _doc_go_tool() {
+  local tool_name=""
+  tool_name="$1"
+  make -C "$(_tool_dirpath "$tool_name")" doc
 }
 
 function _package_go_tool() {
