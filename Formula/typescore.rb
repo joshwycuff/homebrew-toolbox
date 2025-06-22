@@ -1,8 +1,8 @@
 class Typescore < Formula
   desc "Simple tool to score the typing difficulty of text"
   homepage "https://github.com/joshwycuff/homebrew-toolbox"
-  url "https://github.com/joshwycuff/homebrew-toolbox/releases/download/typescore-654f46bc058ea34cb4bf1373b439b902cf699b1f/typescore.tar.gz"
-  version "654f46bc058ea34cb4bf1373b439b902cf699b1f"
+  url "https://github.com/joshwycuff/homebrew-toolbox/releases/download/typescore-2c93a9d538e6fccd455dc908a82e3bd876ea99ee/typescore.tar.gz"
+  version "2c93a9d538e6fccd455dc908a82e3bd876ea99ee"
 
   def install
     bin.install "typescore"
