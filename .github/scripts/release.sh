@@ -21,10 +21,13 @@ else
 fi
 
 function main() {
+  local pattern=""
   local tool_name=""
   local tool_path=""
 
-  for tool_path in tools/*; do
+  pattern="${1:-*}"
+
+  for tool_path in tools/$pattern; do
     tool_name="$(basename "$tool_path")"
     echo "Checking $tool_name"
     if ! _check_changes "$tool_path"; then
@@ -184,4 +187,4 @@ function _tag() {
   printf "%s-%s" "$tool_name" "$tool_version"
 }
 
-main
+main "$@"
