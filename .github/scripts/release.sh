@@ -27,11 +27,11 @@ function main() {
   for tool_path in tools/*; do
     tool_name="$(basename "$tool_path")"
     echo "Checking $tool_name"
-    if ! _check_changes "$tool_name"; then
+    if ! _check_changes "$tool_path"; then
       echo "Skipping $tool_name"
       continue
     fi
-    if ! _check_release "$tool_name"; then
+    if _check_version "$tool_name"; then
       echo "Skipping $tool_name"
       continue
     fi
@@ -57,14 +57,14 @@ function _check_changes() {
   fi
 
   # Check for untracked files
-  if [ -n "$(git ls-files --others --exclude-standard -- "$relpath")" ]; then
+  if [[ "$(git ls-files --others --exclude-standard -- "$relpath" | wc -l)" -gt 0 ]]; then
     echo "There are untracked files."
     return 1
   fi
 }
 
-# check if a release is necessary
-function _check_release() {
+# check if homebrew version matches most recent git commit id
+function _check_version() {
   local tool_name=""
   local prev_version=""
   local next_version=""
@@ -127,34 +127,30 @@ function _tool_homebrew_version() {
   tool_name="$1"
   tool_formula="$(_tool_formula "$tool_name")"
 
-  grep -E 'prev_version "[a-z0-9]+"' "$tool_formula" | $SED -n 's/.*prev_version "\([^"]*\)".*/\1/p'
+  grep -E 'version "[a-z0-9]+"' "$tool_formula" | $SED -n 's/.*version "\([^"]*\)".*/\1/p'
 }
 
 # get tool commit id from git log
 function _tool_git_commit_id() {
   local tool_name=""
-  local tool_path=""
+  local tool_dirpath=""
 
   tool_name="$1"
-  tool_path="$(_tool_path "$tool_name")"
+  tool_dirpath="$(_tool_dirpath "$tool_name")"
 
-  git log -n 1 --pretty='format:%H' -- ':!Makefile' ':!README.md' "$tool_path"
+  git log -n 1 --pretty='format:%H' -- ':!Makefile' ':!README.md' "$tool_dirpath"
 }
 
 function _is_go_tool() {
   local tool_name=""
-
   tool_name="$1"
-
-  [[ -f "$(_tool_path "$tool_name)")/go.mod" ]]
+  [[ -f "$(_tool_dirpath "$tool_name)")/go.mod" ]]
 }
 
 function _build_go_tool() {
   local tool_name=""
-
   tool_name="$1"
-
-  make -C "$(_tool_path "$tool_name")" build
+  make -C "$(_tool_dirpath "$tool_name")" build
 }
 
 function _tool_path() {
