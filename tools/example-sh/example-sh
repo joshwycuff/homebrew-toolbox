@@ -1,0 +1,70 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Default values
+VERBOSE=false
+MODE="default"
+
+usage() {
+  echo "Usage: $0 [--verbose] [--mode MODE] <input_file> [output_file]"
+  echo
+  echo "Positional arguments:"
+  echo "  input_file        Path to the input file (required)"
+  echo "  output_file       Path to the output file (optional)"
+  echo
+  echo "Options:"
+  echo "  --verbose         Enable verbose output"
+  echo "  --mode MODE       Specify mode of operation (default: default)"
+  echo "  -h, --help        Show this help message and exit"
+  exit 1
+}
+
+# Parse options
+POSITIONAL_ARGS=()
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --verbose)
+      VERBOSE=true
+      shift
+      ;;
+    --mode)
+      if [[ -z "${2:-}" ]]; then
+        echo "Error: --mode requires a value" >&2
+        usage
+      fi
+      MODE="$2"
+      shift 2
+      ;;
+    -h|--help)
+      usage
+      ;;
+    -*)
+      echo "Unknown option: $1" >&2
+      usage
+      ;;
+    *)
+      POSITIONAL_ARGS+=("$1")
+      shift
+      ;;
+  esac
+done
+
+# Restore positional arguments
+set -- "${POSITIONAL_ARGS[@]}"
+
+# Check required arguments
+if [[ $# -lt 1 ]]; then
+  echo "Error: input_file is required" >&2
+  usage
+fi
+
+INPUT_FILE="$1"
+OUTPUT_FILE="${2:-/dev/null}"  # Default to /dev/null if not specified
+
+# Example usage of arguments
+$VERBOSE && echo "Running in verbose mode"
+echo "Mode: $MODE"
+echo "Input file: $INPUT_FILE"
+echo "Output file: $OUTPUT_FILE"
+
+# Add your main script logic here

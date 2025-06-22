@@ -1,0 +1,78 @@
+#!/usr/bin/env python3.12
+"""
+A simple Python example.
+"""
+
+# std
+import argparse
+import logging
+import sys
+from typing import Callable
+
+# constants
+LOCAL = "local"
+PR = "pr"
+DEV = "dev"
+STAGE = "stage"
+PROD = "prod"
+VALID_ENVIRONMENTS = (LOCAL, PR, DEV, STAGE, PROD)
+
+
+def get_parser() -> argparse.ArgumentParser:
+    mixin_parser = argparse.ArgumentParser(add_help=False)
+    mixin_parser.add_argument(
+        "--debug", "-d", action="store_true", help="Turn on debug logs."
+    )
+    mixin_parser.add_argument(
+        "--environment", "-e",
+        type=str,
+        default=LOCAL,
+        choices=VALID_ENVIRONMENTS,
+        help=f"Astro environment {VALID_ENVIRONMENTS}.",
+    )
+
+    parser = argparse.ArgumentParser(
+        description=__doc__,
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        parents=[mixin_parser],
+    )
+
+    subparsers = parser.add_subparsers(required=True)
+
+    print_env_parser = subparsers.add_parser(
+        "print-env",
+        parents=[mixin_parser],
+        help="Print chosen environment name to stdout.",
+    )
+    print_env_parser.set_defaults(handler=handle_print_env)
+
+    return parser
+
+
+def parse_args() -> dict:
+
+    args = get_parser().parse_args()
+    return vars(args)
+
+
+def main(
+        handler: Callable,
+        debug: bool,
+        **kwargs,
+):
+    log_level = logging.DEBUG if debug else logging.INFO
+
+    logging.basicConfig(
+        format="[%(levelname)s] %(message)s", level=log_level, stream=sys.stderr
+    )
+
+    handler(**kwargs)
+
+
+def handle_print_env(environment: str):
+    logging.info(f"I'm going to print \"{environment}\" to stdout..")
+    print(environment)
+
+
+if __name__ == '__main__':
+    main(**parse_args())
