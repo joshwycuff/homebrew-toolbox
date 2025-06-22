@@ -111,7 +111,7 @@ function _perform_release() {
   fi
 
   echo "Creating release"
-  gh release create "$next_tag" "$(_tool_path "$tool_name")"
+  gh release create "$next_tag" "$(_tool_path "$tool_name")" "$(_tool_dirpath "$tool_name")/*.1"
 }
 
 # update prev_version in homebrew formula
@@ -159,6 +159,7 @@ function _build_go_tool() {
   local tool_name=""
   tool_name="$1"
   make -C "$(_tool_dirpath "$tool_name")" build
+  make -C "$(_tool_dirpath "$tool_name")" dev-man
 }
 
 function _tool_path() {
