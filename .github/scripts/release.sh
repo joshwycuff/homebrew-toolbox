@@ -35,7 +35,8 @@ function main() {
       echo "Skipping $tool_name"
       continue
     fi
-    echo "Perform release for $tool_name"
+    echo "Performing release for $tool_name"
+    _perform_release "$tool_name"
   done
 }
 
