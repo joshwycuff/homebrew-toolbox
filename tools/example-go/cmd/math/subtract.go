@@ -6,7 +6,6 @@ import (
 	"strconv"
 )
 
-// subtractCmd represents the test command
 var subtractCmd = &cobra.Command{
 	Use:          "subtract <left> <right>",
 	Aliases:      []string{"sub"},

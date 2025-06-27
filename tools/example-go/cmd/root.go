@@ -1,13 +1,22 @@
 package cmd
 
 import (
-	"github.com/joshwycuff/homebrew-toolbox/tools/example-go/cmd/math"
-	"github.com/spf13/cobra"
-	"log/slog"
+	"fmt"
 	"os"
+	"strings"
+	"time"
+
+	"github.com/rs/zerolog"
+	"github.com/rs/zerolog/log"
+	"github.com/spf13/cobra"
+
+	"github.com/joshwycuff/homebrew-toolbox/tools/example-go/cmd/math"
 )
 
+var rootFlagInfo bool
 var rootFlagDebug bool
+var rootFlagTrace bool
+var rootFlagVerbosity int
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
@@ -24,17 +33,29 @@ to quickly create a Cobra application.`,
 }
 
 func setupDefaultLogger(cmd *cobra.Command, args []string) error {
-	var level slog.Level
-	if rootFlagDebug {
-		level = slog.LevelDebug
+	writer := zerolog.ConsoleWriter{Out: os.Stderr, TimeFormat: time.RFC3339}
+	writer.FormatLevel = func(i interface{}) string {
+		return strings.ToUpper(fmt.Sprintf("| %s |", i))
+	}
+	log.Logger = log.Output(writer)
+
+	if rootFlagTrace || rootFlagVerbosity >= 3 {
+		zerolog.SetGlobalLevel(zerolog.TraceLevel)
+	} else if rootFlagDebug || rootFlagVerbosity >= 2 {
+		zerolog.SetGlobalLevel(zerolog.DebugLevel)
+	} else if rootFlagInfo || rootFlagVerbosity >= 1 {
+		zerolog.SetGlobalLevel(zerolog.InfoLevel)
 	} else {
-		level = slog.LevelInfo
+		zerolog.SetGlobalLevel(zerolog.WarnLevel)
 	}
 
-	handler := slog.NewTextHandler(os.Stderr, &slog.HandlerOptions{
-		Level: level,
-	})
-	slog.SetDefault(slog.New(handler))
+	//log.Panic().Msg("panic")
+	//log.Fatal().Msg("fatal")
+	//log.Error().Msg("error")
+	//log.Warn().Msg("warn")
+	//log.Info().Msg("info")
+	//log.Debug().Msg("debug")
+	//log.Trace().Msg("trace")
 
 	return nil
 }
@@ -51,5 +72,8 @@ func Execute() {
 func init() {
 	rootCmd.AddCommand(math.Cmd)
 
-	rootCmd.PersistentFlags().BoolVarP(&rootFlagDebug, "debug", "d", false, "Enable debug mode")
+	rootCmd.PersistentFlags().BoolVar(&rootFlagInfo, "info", false, "Enable debug level logging")
+	rootCmd.PersistentFlags().BoolVar(&rootFlagDebug, "debug", false, "Enable debug level logging")
+	rootCmd.PersistentFlags().BoolVar(&rootFlagTrace, "trace", false, "Enable trace level logging")
+	rootCmd.PersistentFlags().CountVarP(&rootFlagVerbosity, "verbosity", "v", "Increase verbosity of logging")
 }

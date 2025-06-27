@@ -10,7 +10,6 @@ import (
 
 var helloFlagLoud bool
 
-// helloCmd represents the hello command
 var helloCmd = &cobra.Command{
 	Use:               "hello",
 	Short:             "Say hello.",

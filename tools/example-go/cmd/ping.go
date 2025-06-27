@@ -6,7 +6,6 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// pingCmd represents the ping command
 var pingCmd = &cobra.Command{
 	Use:          "ping",
 	Short:        "You say ping. I say pong.",

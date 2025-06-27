@@ -2,9 +2,9 @@ package cmd
 
 import (
 	"fmt"
+	"github.com/rs/zerolog/log"
 	"github.com/spf13/cobra"
 	"github.com/spf13/cobra/doc"
-	"log/slog"
 	"os"
 )
 
@@ -15,10 +15,10 @@ var docCmd = &cobra.Command{
 	SilenceUsage: true,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		if err := os.MkdirAll("./docs", 0755); err != nil {
-			slog.Error(fmt.Sprintf("Error creating docs directory: %v\n", err))
+			log.Error().Msg(fmt.Sprintf("Error creating docs directory: %v\n", err))
 			return err
 		}
-		slog.Info("Generating markdown reference documentation for the project")
+		log.Info().Msg("Generating markdown reference documentation for the project")
 		return doc.GenMarkdownTree(rootCmd, "./docs")
 	},
 }

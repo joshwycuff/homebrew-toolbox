@@ -2,12 +2,11 @@ package math
 
 import (
 	"fmt"
+	"github.com/rs/zerolog/log"
 	"github.com/spf13/cobra"
-	"log/slog"
 	"strconv"
 )
 
-// addCmd represents the test command
 var addCmd = &cobra.Command{
 	Use:          "add <number> [<number>...]",
 	Short:        "Add N integers together.",
@@ -21,7 +20,7 @@ func add(cmd *cobra.Command, args []string) error {
 	var total int64
 
 	for _, arg := range args {
-		slog.Debug(fmt.Sprintf("Adding %s", arg))
+		log.Debug().Msg(fmt.Sprintf("Adding %s", arg))
 		n, err := strconv.ParseInt(arg, 10, 64)
 		if err != nil {
 			return err
