@@ -1,8 +1,8 @@
 class ExampleGo < Formula
   desc "A brief description of your application"
   homepage "https://github.com/joshwycuff/homebrew-toolbox"
-  url "https://github.com/joshwycuff/homebrew-toolbox/releases/download/example-go-467902456c027ce44a11fdb4e969708ffdf28f99/example-go.tar.gz"
-  version "467902456c027ce44a11fdb4e969708ffdf28f99"
+  url "https://github.com/joshwycuff/homebrew-toolbox/releases/download/example-go-339087054f8508845e80044d4c0a670861605355/example-go.tar.gz"
+  version "339087054f8508845e80044d4c0a670861605355"
 
   def install
     bin.install "example-go"
