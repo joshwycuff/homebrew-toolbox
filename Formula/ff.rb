@@ -1,8 +1,8 @@
 class Ff < Formula
   desc "A brief description of your application"
   homepage "https://github.com/joshwycuff/homebrew-toolbox"
-  url "https://github.com/joshwycuff/homebrew-toolbox/releases/download/ff-436eac29cf2370b10f7dc52739fed97a38222170/ff.tar.gz"
-  version "436eac29cf2370b10f7dc52739fed97a38222170"
+  url "https://github.com/joshwycuff/homebrew-toolbox/releases/download/ff-f374b4c95ad2cc9913228b2927d60be0823c7304/ff.tar.gz"
+  version "f374b4c95ad2cc9913228b2927d60be0823c7304"
 
   depends_on "rg"
   depends_on "bat"
